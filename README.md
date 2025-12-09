@@ -1,70 +1,185 @@
-# Getting Started with Create React App
+# Gematria Explorer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A powerful, interactive Gematria calculator and research tool built with
+React. This application allows users to calculate Hebrew Gematria,
+discover significant matching numbers, and search the entire Torah for
+words, phrases, and verses with equivalent values.
 
-## Available Scripts
+## ✨ Features
 
-In the project directory, you can run:
+-   **Real-time Calculation:** Instantly calculates the Gematria value
+    of Hebrew text as you type.
+-   **Torah Search:** Indexes the entire Torah (Pentateuch) to find
+    words or phrases matching your calculated value.
+    -   **Parsha Filtering:** Limit search results to specific Torah
+        portions.
+    -   **Whole Verse Matching:** Detects when an entire Pasuk (verse)
+        sums to the target number.
+    -   **Colel Mode (±1):** Optional search for values plus or minus
+        one.
+    -   **Single Word Mode:** Filter to show only single-word matches.
+-   **Wedding / Bridge Calculator:** A unique "Matchmaker" mode that
+    calculates the numerical bridge needed to connect two names to a
+    target goal (e.g., *Names + X = Mazel Tov*).
+-   **Common Gematria Discovery:** "Did you know?" cards that highlight
+    culturally significant numbers (e.g., 18 = Chai, 26 = Hashem).
+-   **Virtual Hebrew Keyboard:** Built-in on-screen keyboard for users
+    without Hebrew support.
+-   **Data & Stats:** Displays verse counts for Parshas and highlights
+    structural matches.
 
-### `npm start`
+## 🛠️ Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+-   **Frontend:** React.js, CSS3\
+-   **Data Processing:** Python (for indexing and generating JSON
+    databases)\
+-   **Data Source:** Sefaria API\
+-   **Deployment:** Docker, Nginx
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🚀 Getting Started
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+-   **Node.js** (v14 or higher)
+-   **Python 3.x** (for generating the data index)
+-   **npm** or **yarn**
 
-### `npm run build`
+------------------------------------------------------------------------
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 1. Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Clone the repository and install dependencies:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+``` bash
+git clone https://github.com/your-username/gematria-explorer.git
+cd gematria-explorer
+npm install
+```
 
-### `npm run eject`
+------------------------------------------------------------------------
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 2. Generate the Data Index (Crucial Step)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The app relies on a pre-built index of the Torah. You must generate this
+locally before running the app.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Navigate to the backend tools folder:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+``` bash
+cd backend_tools
+```
 
-## Learn More
+Install the Python requests library:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+``` bash
+pip install requests
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Run the builder scripts in order:
 
-### Code Splitting
+**Build the Torah Index:** Fetches text from Sefaria and creates the
+search database.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+``` bash
+python build_index.py
+```
 
-### Analyzing the Bundle Size
+Output: `public/torah_index.json` (approx. 50MB+)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+**Build Parsha Map:** Fetches verse counts and ranges for all 54
+Parshas.
 
-### Making a Progressive Web App
+``` bash
+python build_parshas.py
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Output: `src/utils/parshas.js`
 
-### Advanced Configuration
+**Build Common Dictionary:** Generates the list of common Jewish
+concepts.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+``` bash
+python build_common_offline.py
+```
 
-### Deployment
+Output: `src/data/common_gematria.json`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Return to the root folder:
 
-### `npm run build` fails to minify
+``` bash
+cd ..
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+------------------------------------------------------------------------
+
+### 3. Run the App
+
+Start the development server:
+
+``` bash
+npm start
+```
+
+Open: `http://localhost:3000`
+
+------------------------------------------------------------------------
+
+## 🐳 Deployment (Docker & Nginx)
+
+This app is configured for production deployment using Docker and Nginx.
+It is set up to run in a subdirectory (e.g.,
+`yourdomain.com/gematria-explorer`).
+
+### Configuration
+
+-   **Homepage:** Ensure `package.json` contains
+
+    ``` json
+    "homepage": "/gematria-explorer"
+    ```
+
+-   **Proxy:** Verify your Nginx proxy passes the correct headers.
+
+### Build and Run with Docker Compose
+
+Make sure you have `docker-compose.yml`, `Dockerfile`, and `nginx.conf`
+in your root directory.
+
+Run the build command:
+
+``` bash
+docker-compose up -d --build
+```
+
+The app will be served on **Port 80** (or whichever port is configured).
+
+------------------------------------------------------------------------
+
+## 📁 Directory Structure
+
+``` plaintext
+/gematria-explorer
+|-- /backend_tools        # Python scripts to generate data
+|-- /public               # Static assets & Large DB (torah_index.json)
+|-- /src
+|   |-- /data             # Smaller JSON data (common_gematria.json)
+|   |-- /utils            # Logic (calculator, filter, keyboard)
+|   |-- App.js            # Main Component
+|   |-- App.css           # Styling
+|-- Dockerfile            # Production build instructions
+|-- nginx.conf            # Nginx server config
+|-- package.json
+```
+
+------------------------------------------------------------------------
+
+## 🤝 Acknowledgements
+
+-   **Sefaria:** For providing an incredible open API for Jewish texts.\
+-   **Open Source:** Built with React and Python.
+
+------------------------------------------------------------------------
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
