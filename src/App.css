@@ -21,13 +21,31 @@
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
+/* Container for the Input + Keyboard */
+.input-group {
+  width: 100%;        /* Force it to fill the container */
+  max-width: none;    /* Remove the 600px limit */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Ensure the Text Input Box fills the space */
 .input-field {
   width: 100%;
+  box-sizing: border-box;
   padding: 1rem;
   font-size: 1.5rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-top: 0.5rem;
+  border-radius: 8px;
+  text-align: right;
+}
+
+/* Ensure the Keyboard Grid fills the space */
+.grid {
+  width: 100%;
+  box-sizing: border-box;
+  /* keep your existing grid-template-columns settings here */
 }
 
 .value-box {
