@@ -1,6 +1,6 @@
 {
   "name": "gematria-app",
-  "homepage": "/gematria-explorer",
+  "homepage": "/gematria-explorer/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
