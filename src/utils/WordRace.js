@@ -2,13 +2,21 @@ import React, { useState, useEffect, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import raceData from '../data/race_data.json';
 
-const COLORS = ['#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe', '#e0f2fe', '#f0f9ff', '#d1fae5', '#a7f3d0', '#6ee7b7'];
+const COLORS = [
+  '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe', 
+  '#dc2626', '#ef4444', '#f87171', '#fca5a5', '#fecaca',
+  '#059669', '#10b981', '#34d399', '#6ee7b7', '#a7f3d0',
+  '#d97706', '#f59e0b', '#fbbf24', '#fcd34d', '#fde68a'
+];
 
 const WordRace = () => {
   const [frameIndex, setFrameIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [usePrefixes, setUsePrefixes] = useState(true); // Default: Include prefixes
+  const [usePrefixes, setUsePrefixes] = useState(true); 
   const timerRef = useRef(null);
+
+  // CONFIG: Slower speed for smoother visual alignment
+  const ANIMATION_SPEED_MS = 250; 
 
   // ANIMATION LOOP
   useEffect(() => {
@@ -21,7 +29,7 @@ const WordRace = () => {
           }
           return prev + 1;
         });
-      }, 100); 
+      }, ANIMATION_SPEED_MS); 
     } else {
       clearInterval(timerRef.current);
     }
@@ -29,28 +37,25 @@ const WordRace = () => {
   }, [isPlaying]);
 
   const currentFrame = raceData[frameIndex];
-  
-  // Decide which data key to sort and display
   const dataKey = usePrefixes ? "prefix" : "exact";
   
-  // Re-sort data based on the toggle (since JSON is sorted by prefix default)
+  // Sort and Slice
   const displayData = [...currentFrame.data]
       .sort((a, b) => b[dataKey] - a[dataKey])
-      .slice(0, 10); // Top 10
+      .slice(0, 20);
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mt-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold flex items-center gap-2">
-           🏆 Torah Word Race
+           🏆 Torah Word Race (Top 20)
         </h2>
         <div className="text-2xl font-mono font-bold text-blue-600 bg-blue-50 px-4 py-1 rounded">
             {currentFrame.label}
         </div>
       </div>
 
-      {/* TOGGLE */}
-      <div className="flex items-center gap-2 mb-4 text-sm bg-gray-50 p-2 rounded w-fit">
+      <div className="flex items-center gap-2 mb-4 text-sm bg-gray-50 p-2 rounded w-fit border border-gray-200">
           <label className="flex items-center gap-2 cursor-pointer">
               <input 
                   type="checkbox"
@@ -61,38 +66,49 @@ const WordRace = () => {
           </label>
       </div>
 
-      {/* CHART AREA */}
-      <div style={{ width: '100%', height: 400 }}>
+      <div style={{ width: '100%', height: 650 }}>
         <ResponsiveContainer>
           <BarChart
             layout="vertical"
             data={displayData}
-            margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
-            animationDuration={300} 
+            margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" horizontal={false} />
             <XAxis type="number" hide />
             <YAxis 
                 type="category" 
                 dataKey="name" 
-                width={100}
-                tick={{ fontSize: 14, fontWeight: 'bold' }}
+                width={120}
+                tick={{ fontSize: 13, fontWeight: 'bold' }}
+                interval={0}
+                // CRITICAL FIX: Ensure the axis updates immediately with the data
+                isAnimationActive={false}
             />
             <Tooltip 
                 cursor={{fill: 'transparent'}} 
                 formatter={(value) => [value, usePrefixes ? "Occurrences (w/ Prefix)" : "Exact Matches"]}
             />
-            <Bar dataKey={dataKey} radius={[0, 4, 4, 0]} barSize={20}>
+            <Bar 
+                dataKey={dataKey} 
+                radius={[0, 4, 4, 0]} 
+                barSize={18}
+                // CRITICAL FIX: Match the animation duration to the update interval
+                // This ensures the bar finishes growing before the next frame starts.
+                animationDuration={ANIMATION_SPEED_MS}
+                animationEasing="linear"
+            >
               {displayData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                // CRITICAL FIX: Use the WORD NAME as the key, not the index.
+                // This tells React: "This bar is Moshe." 
+                // If Moshe moves down, the bar moves down with him.
+                <Cell key={entry.name} fill={COLORS[index % COLORS.length]} />
               ))}
             </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
 
-      {/* CONTROLS */}
-      <div className="mt-6 flex items-center gap-4 bg-gray-50 p-4 rounded-lg">
+      <div className="mt-6 flex items-center gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
         <button 
             onClick={() => setIsPlaying(!isPlaying)}
             className={`px-6 py-2 rounded-full font-bold text-white transition ${isPlaying ? 'bg-red-500 hover:bg-red-600' : 'bg-green-600 hover:bg-green-700'}`}
