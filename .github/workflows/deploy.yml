@@ -17,7 +17,7 @@ jobs:
           script: |
             # 1. Navigate to project folder
             # Change this path if your folder is named differently
-            cd /root/gematria-app
+            cd /home/marklebrett/n8n-docker-caddy/gematria-app
 
             # 2. Hard Reset & Pull (clean slate)
             git reset --hard
