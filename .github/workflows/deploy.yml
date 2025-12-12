@@ -16,24 +16,25 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           command_timeout: 30m
           script: |
-            # 1. Navigate to project folder
-            # Change this path if your folder is named differently
             cd /home/marklebrett/n8n-docker-caddy/gematria-app
 
-            # 2. Hard Reset & Pull (clean slate)
+            # 1. Stop Containers FIRST to free up RAM
+            echo "Stopping containers to free memory..."
+            docker compose down
+
+            # 2. Update Code
             git reset --hard
             git pull origin main
 
-            # 3. Regenerate Data
+            # 3. Regenerate Data (Now we have plenty of RAM!)
             echo "Building Torah Text..."
             python3 backend_tools/build_torah_text.py
             
             echo "Building Race Data..."
             python3 backend_tools/build_race_data.py
 
-            # 4. Rebuild using Docker Compose V2
+            # 4. Restart App
             echo "Rebuilding App..."
-            docker compose down --remove-orphans
             docker compose up -d --build
 
             echo "Deployment Complete! 🚀"
