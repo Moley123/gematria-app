@@ -15,7 +15,6 @@ const WordRace = () => {
   const [usePrefixes, setUsePrefixes] = useState(true); 
   const timerRef = useRef(null);
 
-  // CONFIG: Slower speed for smoother visual alignment
   const ANIMATION_SPEED_MS = 250; 
 
   // ANIMATION LOOP
@@ -71,17 +70,23 @@ const WordRace = () => {
           <BarChart
             layout="vertical"
             data={displayData}
-            margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
+            margin={{ top: 5, right: 30, left: 60, bottom: 20 }} // Added bottom margin for axis labels
           >
             <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-            <XAxis type="number" hide />
+            
+            {/* UPDATED X-AXIS (Now Visible) */}
+            <XAxis 
+                type="number" 
+                domain={[0, 'auto']} 
+                tick={{ fontSize: 12, fill: '#6b7280' }}
+            />
+
             <YAxis 
                 type="category" 
                 dataKey="name" 
                 width={120}
                 tick={{ fontSize: 13, fontWeight: 'bold' }}
                 interval={0}
-                // CRITICAL FIX: Ensure the axis updates immediately with the data
                 isAnimationActive={false}
             />
             <Tooltip 
@@ -92,15 +97,10 @@ const WordRace = () => {
                 dataKey={dataKey} 
                 radius={[0, 4, 4, 0]} 
                 barSize={18}
-                // CRITICAL FIX: Match the animation duration to the update interval
-                // This ensures the bar finishes growing before the next frame starts.
                 animationDuration={ANIMATION_SPEED_MS}
                 animationEasing="linear"
             >
               {displayData.map((entry, index) => (
-                // CRITICAL FIX: Use the WORD NAME as the key, not the index.
-                // This tells React: "This bar is Moshe." 
-                // If Moshe moves down, the bar moves down with him.
                 <Cell key={entry.name} fill={COLORS[index % COLORS.length]} />
               ))}
             </Bar>
