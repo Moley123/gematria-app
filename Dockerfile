@@ -4,6 +4,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+# FIX 1: Disable Source Map generation to save ~50% RAM
+ENV GENERATE_SOURCEMAP=false
+# FIX 2: Increase Node memory limit (optional, but helpful)
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
 # Stage 2: Serve with Nginx

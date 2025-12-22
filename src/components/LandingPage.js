@@ -138,7 +138,7 @@ const LandingPage = () => {
 
       {/* FOOTER */}
       <footer className="text-center text-gray-600 py-10">
-        <p>&copy; {new Date().getFullYear()} Mark Lebrett. All systems operational.</p>
+        <p>&copy; {new Date().getFullYear()} EMEL Systems - Mark Lebrett. All systems operational.</p>
       </footer>
     </div>
   );
