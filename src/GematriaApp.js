@@ -60,43 +60,28 @@ const GematriaApp = () => {
     setMatcherTargetValue(calc(matcherTarget));
   }, [matcherTarget]);
 
-// C. Crash-Proof Database Loader
+// C. Lazy Load DB
   useEffect(() => {
     if ((isSearchMode || isMatcherMode || viewMode === 'trends') && !indexData) {
       setIsLoadingDB(true);
       
-      fetch('/torah_text.json')
+      // FIX: Use process.env.PUBLIC_URL to ensure we look in the right folder
+      // whether we are on localhost or marklebrett.co.uk/gematria-explorer
+      fetch('/torah_index.json')
         .then(response => {
-           if (!response.ok) throw new Error("File not found");
+           // Check if the response is actually valid JSON
+           const contentType = response.headers.get("content-type");
+           if (!response.ok || (contentType && contentType.indexOf("application/json") === -1)) {
+               throw new Error("File not found or invalid format");
+           }
            return response.json();
         })
         .then((data) => {
-          // DEBUG: Log what we actually got
-          console.log("Database Loaded. Type:", Array.isArray(data) ? "Array" : typeof data);
-
-          // SCENARIO 1: It's a raw List (Array) -> Convert to Index
-          if (Array.isArray(data)) {
-             const newIndex = {};
-             data.forEach(verse => {
-                 const val = getGematria(verse.text); 
-                 if (!newIndex[val]) newIndex[val] = [];
-                 newIndex[val].push({
-                     ...verse, 
-                     // Ensure we have the properties the app expects
-                     context_en: verse.text_en || verse.translation || ""
-                 });
-             });
-             setIndexData(newIndex);
-          } 
-          // SCENARIO 2: It's already an Object (Index) -> Use directly
-          else if (typeof data === 'object' && data !== null) {
-             setIndexData(data);
-          }
-          
+          setIndexData(data);
           setIsLoadingDB(false);
         })
         .catch((err) => {
-          console.error("DB Load Failed:", err);
+          console.error("Failed to load DB:", err);
           setIsLoadingDB(false);
         });
     }
