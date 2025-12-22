@@ -1,18 +1,31 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import GematriaApp from './GematriaApp';
 import './App.css'; 
 
 const App = () => {
+  // Debug: Log to console so we know the App is actually running
+  console.log("App is mounting. Current Path:", window.location.pathname);
+
   return (
     <Router>
       <Routes>
-        {/* The Root URL (Landing Page) */}
+        {/* 1. Root URL */}
         <Route path="/" element={<LandingPage />} />
         
-        {/* The Gematria App URL */}
+        {/* 2. Gematria App */}
         <Route path="/gematria" element={<GematriaApp />} />
+
+        {/* 3. DEBUG: Catch-all for 404s */}
+        {/* This will show us what URL the router is seeing */}
+        <Route path="*" element={
+            <div style={{ padding: 50, color: 'red', textAlign: 'center' }}>
+                <h1>404 - Route Not Found</h1>
+                <p>The router sees this path: <strong>{window.location.pathname}</strong></p>
+                <p>Check your address bar.</p>
+            </div>
+        } />
       </Routes>
     </Router>
   );
