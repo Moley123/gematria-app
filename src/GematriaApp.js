@@ -67,7 +67,7 @@ const GematriaApp = () => {
       
       // FIX: Use process.env.PUBLIC_URL to ensure we look in the right folder
       // whether we are on localhost or marklebrett.co.uk/gematria-explorer
-      fetch(`${process.env.PUBLIC_URL}/torah_index.json`)
+      fetch('/torah_text.json')
         .then(response => {
            // Check if the response is actually valid JSON
            const contentType = response.headers.get("content-type");

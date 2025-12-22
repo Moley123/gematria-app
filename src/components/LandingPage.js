@@ -63,7 +63,7 @@ const LandingPage = () => {
       
       {/* HERO SECTION */}
       <div className="flex flex-col items-center justify-center pt-24 px-4 text-center">
-        <div className="transition-all duration-1000 opacity-100 translate-y-0">
+        <div className={`transition-all duration-1000 ${loading ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
             <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
             Welcome, Visitor.
             </h1>
