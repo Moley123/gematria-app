@@ -1,17 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+
+console.log("Sanity Check: index.js is running!");
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <div style={{ backgroundColor: 'red', color: 'white', padding: '50px', fontSize: '30px' }}>
+    <h1>SYSTEM STATUS: ONLINE</h1>
+    <p>If you see this, React is working.</p>
+    <p>The issue is inside App.js or LandingPage.js</p>
+  </div>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
