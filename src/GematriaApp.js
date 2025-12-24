@@ -251,6 +251,10 @@ const GematriaApp = () => {
 
   return (
     <div className="app-container">
+
+      <title>Gematria Explorer</title>
+      <meta name="description" content="Calculate Hebrew Gematria instantly. Search the Torah index, analyze phrases, and discover hidden numerical connections." />
+
       {/* HEADER SECTION */}
       <header className="relative flex items-center justify-center p-4 bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 mb-6 sticky top-0 z-50">
         

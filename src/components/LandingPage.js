@@ -61,6 +61,9 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black text-white font-sans selection:bg-blue-500 selection:text-white">
       
+      <title>Mark Lebrett | Portal</title>
+      <meta name="description" content="Welcome to the personal portal of Mark Lebrett. Explore projects, tools, and insights." />
+
       {/* HERO SECTION */}
       <div className="flex flex-col items-center justify-center pt-24 px-4 text-center">
         <div className={`transition-all duration-1000 ${loading ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
